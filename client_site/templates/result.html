@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+{% if done is True %}
+
+<h1>Post succesfull </h1>
+<!-- <p>{{ form_data }}</p> -->
+
+{% else %}
+
+<h1>Post Un-succesfull </h1>
+<!-- <p>{{ form_data }}</p> -->
+
+{% endif %}
+
+<a href="{% url 'get_form' %}">Go back to Post</a>
+
+{% endblock %}

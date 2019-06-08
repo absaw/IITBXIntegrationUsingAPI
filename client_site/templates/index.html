@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<center><i><span style="font-size: 20px;"> Platform API POST </span></i></center>
+<br/><br/>
+
+    <div class="row">
+
+        <div class="col m3"></div>
+
+        <div class="col m6">
+
+            <form method="POST" action="post/" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="org">Organisation:</label>
+                    <input type="text" class="form-control" id="org" name="org">
+                </div>
+
+                <div class="form-group">
+                    <label for="thirdparty_platform_name">Third Party Platform Name:</label>
+                    <input type="text" class="form-control" id="thirdparty_platform_name" name="thirdparty_platform_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="ServerUrl">Server Url:</label>
+                    <input type="text" class="form-control" id="ServerUrl" name="ServerUrl">
+                </div>
+
+                <div class="form-group">
+                    <label for="integrationstart">Integration start:</label>
+                    <input type="datetime" id="integrationstart" name="integrationstart">
+                </div>
+
+                <div class="form-group">
+                    <label for="integrationend">integrationend:</label>
+                    <input type="datetime" id="integrationend" name="integrationend">
+                </div>
+
+                <div class="form-group">
+                    <label for="isactive">isactive:</label>
+                    <input type="checkbox" id="isactive" name="isactive">
+                </div>
+
+                <div class="form-group">
+                    <label for="short_description">short_description:</label>
+                    <input type="text" id="short_description" name="short_description">
+                </div>
+
+                <button type="submit" class="btn btn-default" name="submit">Submit</button>
+
+            </form>
+        </div>
+        <div class="col m3"></div>
+    </div>
+{% endblock %}
