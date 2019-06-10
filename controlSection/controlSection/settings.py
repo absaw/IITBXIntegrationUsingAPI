@@ -25,7 +25,7 @@ SECRET_KEY = 'pz(v8%-tswib#966+vkaad)12i=xj335dx65(-n)-9016kg66z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.2","127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.2","127.0.0.1","10.105.24.250"]
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'platform_client',
     'rest_framework',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'client_site.urls'
+ROOT_URLCONF = 'controlSection.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +72,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'client_site.wsgi.application'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+WSGI_APPLICATION = 'controlSection.wsgi.application'
 
 
 # Database

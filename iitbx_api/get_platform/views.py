@@ -19,7 +19,7 @@ class IntegratedPlatformsList(APIView):
 
     def post(self, request):
          serializer = IntegratedPlatformsSerializer(data=request.data)
-         print(request.data["org"])
+         print("\nData Received By Backend Course API-> \n",request.data)
          if serializer.is_valid():
              serializer.save()
              return Response(serializer.data, status=status.HTTP_201_CREATED)

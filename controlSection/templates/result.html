@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+{% if form_name == "platform" %}
+
+
+    {% if done is True %}
+    <h1>Congratulations! You have successfully created a new Platform </h1>
+    {% else %}
+    <h1>Creation Failed :( </h1>
+    <br>
+    {% endif %}
+
+    <a href="/get_platform_form">Create Another Platform</a>
+    <br>
+
+{% elif form_name == "course" %}
+
+    {% if done is True %}
+    <h1>Congratulations! You have successfully created a new Course </h1>
+    {% else %}
+    <h1>Creation Failed :( </h1>
+    <br>
+    {% endif %}
+
+    <a href="/get_course_form">Create Another Course</a>
+    <br>
+    
+{% endif %}
+
+<a href="/home">Go back to Home</a>
+
+{% endblock %}

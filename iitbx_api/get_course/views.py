@@ -17,6 +17,7 @@ class CourseOverviewList(APIView):
 
     def post(self, request):
          serializer = CourseOverviewSerializer(data=request.data)
+         print("\nData Received By Backend Course API-> \n",request.data)
          if serializer.is_valid():
              serializer.save()
              return Response(serializer.data, status=status.HTTP_201_CREATED)
