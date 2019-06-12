@@ -12,7 +12,7 @@ labels = ['module_type','module_id','course_id','student_id','grade','max_grade'
 mydb = mysql.connector.connect(
   host="10.129.103.92",
   user="root",
-  passwd=os.environ.get('mysql_iitbx'),
+  passwd=os.environ.get("mysql_iitbx"),
   database="edxapp"
 )
 

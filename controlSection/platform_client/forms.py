@@ -1,5 +1,5 @@
 from django import forms
-
+import requests
 class platform_form(forms.Form):
     """
     Form for collecting basic information about an external learning platforms.
@@ -25,7 +25,7 @@ class platform_form(forms.Form):
     isactive = forms.BooleanField(required=False)#Originally True
     #isactive = True
     # about
-    short_description = forms.CharField(required=True)
+    short_description = forms.CharField(required=False)
 
 class course_form(forms.Form):
     """
@@ -69,9 +69,9 @@ class course_form(forms.Form):
 
     # Certification data
     certificates_display_behavior = forms.CharField(required=False)
-    certificates_show_before_end = forms.BooleanField(initial=False)
-    cert_html_view_enabled = forms.BooleanField(initial=False)
-    has_any_active_web_certificate = forms.BooleanField(initial=False)
+    certificates_show_before_end = forms.BooleanField(initial=False, required=False)
+    cert_html_view_enabled = forms.BooleanField(initial=False, required=False)
+    has_any_active_web_certificate = forms.BooleanField(initial=False, required=False)
     cert_name_short = forms.CharField(required=False)
     cert_name_long = forms.CharField(required=False)
 
@@ -80,15 +80,15 @@ class course_form(forms.Form):
 
     # Access parameters
     days_early_for_beta = forms.FloatField(required=False)
-    mobile_available = forms.BooleanField(initial=False)
-    visible_to_staff_only = forms.BooleanField(initial=False)
+    mobile_available = forms.BooleanField(initial=False, required=False)
+    visible_to_staff_only = forms.BooleanField(initial=False, required=False)
     _pre_requisite_courses_json = forms.CharField(required=False)  # JSON representation of list of CourseKey strings
 
     # Enrollment details
     enrollment_start = forms.DateTimeField(required=False, initial="2006-10-25 14:30:59")
     enrollment_end = forms.DateTimeField(required=False, initial="2006-11-25 14:30:59")
     enrollment_domain = forms.CharField(required=False)
-    invitation_only = forms.BooleanField(initial=False)
+    invitation_only = forms.BooleanField(initial=False, required=False)
     max_student_enrollments_allowed = forms.IntegerField(required=False)
 
     # Catalog information
@@ -96,17 +96,32 @@ class course_form(forms.Form):
     short_description = forms.CharField(required=False)
     course_video_url = forms.CharField(required=False)
     effort = forms.CharField(required=False)
-    self_paced = forms.BooleanField(initial=False)
+    self_paced = forms.BooleanField(initial=False, required=False)
     marketing_url = forms.CharField(required=False)
-    eligible_for_financial_aid = forms.BooleanField(initial=True)
+    eligible_for_financial_aid = forms.BooleanField(initial=True, required=False)
 
     language = forms.CharField(required=False) 
 
     # Integration information
-    created_on_edx = forms.BooleanField(initial=False)
+    created_on_edx = forms.BooleanField(initial=False, required=False)
 
     # Time Stamp information
     created = forms.DateTimeField(initial="2006-10-25 14:30:59")
     updated = forms.DateTimeField(initial="2006-11-25 14:30:59")
     #created = forms.DateTimeField(auto_now=True)
     #updated = forms.DateTimeField(auto_now_add=True)    
+
+    resp = requests.get('http://10.105.24.250:8000/get_platform/')
+    platList = []
+    i=0
+    a = resp.json()
+    for item in a:
+        platList.append([])#Adding empty List for Each Platform
+        platList[i].append(item["id"])#Populating the list with id and platform_name
+        platList[i].append(item["thirdparty_platform_name"])
+        i = i+1
+
+    #platList = tuple(platList)
+    
+    select_platforms = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                                            choices=platList, required=False)

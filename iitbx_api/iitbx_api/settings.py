@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'iitbx_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'edxapp',
+        'NAME': 'iitbxapi',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '10.129.103.92',

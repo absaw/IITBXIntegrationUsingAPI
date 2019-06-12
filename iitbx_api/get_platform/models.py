@@ -31,7 +31,10 @@ class IntegratedPlatforms(models.Model):
     isactive = models.BooleanField(default=False)
 
     # about
-    short_description = models.TextField(null=True)
+    short_description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.thirdparty_platform_name
 
     #courses = models.ManyToManyField(CourseOverview, blank=True, related_name='platforms', through="CoursePlatform")
     #courses = models.ManyToManyField(CourseOverview)
