@@ -1,2 +1,7 @@
 #ignore all __pychace__ files
 *.pyc
+
+#igonring virtualenv file
+py36_master_iitbx/
+
+

@@ -48,7 +48,7 @@ def post_course_form(request):
             json_data = json.dumps(form_data, default=convert_timestamp)#dumps()returns data as string
             json_data = json.loads(json_data)#loads() converts string to json format
             
-            resp = requests.post('http://10.105.24.250:8000/get_course/', json=json_data)
+            resp = requests.post('http://127.0.0.1:8000/get_course/', json=json_data)
             #json_data in json format is passed on to backend get_course API
             if resp.status_code != 201:
                 raise ApiError(resp.status_code)
@@ -94,7 +94,7 @@ def post_platform_form(request):
             json_data = json.dumps(form_data, default=convert_timestamp)#dumps()returns data as string
             json_data = json.loads(json_data)#loads() converts string to json format
             
-            resp = requests.post('http://10.105.24.250:8000/get_platform/', json=json_data)#http://10.105.24.250:8000/get_course/
+            resp = requests.post('http://127.0.0.1:8000/get_platform/', json=json_data)#http://10.105.24.250:8000/get_course/
             #json_data in json format is passed on to backend get_platform API
             if resp.status_code != 201:
                 raise ApiError(resp.status_code)

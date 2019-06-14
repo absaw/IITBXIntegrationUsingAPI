@@ -111,7 +111,7 @@ class course_form(forms.Form):
     #created = forms.DateTimeField(auto_now=True)
     #updated = forms.DateTimeField(auto_now_add=True)    
 
-    resp = requests.get('http://10.105.24.250:8000/get_platform/')
+    resp = requests.get('http://127.0.0.1:8000/get_platform/')
     platList = []
     i=0
     a = resp.json()
