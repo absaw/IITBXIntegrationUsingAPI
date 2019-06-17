@@ -28,6 +28,18 @@
 
     <a href="/get_course_form">Create Another Course</a>
     <br>
+
+{% elif form_name == "post_import" %}
+
+    {% if done is True %}
+    <h1>Congratulations! You have successfully imported the Course </h1>
+    {% else %}
+    <h1>importing Failed :( </h1>
+    <br>
+    {% endif %}
+
+    <a href="/get_course_import">Import Another Course</a>
+    <br>
     
 {% endif %}
 

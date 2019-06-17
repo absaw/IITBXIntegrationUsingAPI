@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import requests
-from .forms import platform_form, course_form
+from .forms import platform_form, course_form, course_import
 import datetime
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -176,3 +176,49 @@ def grades_view(request):
             objs  = objs.json()
             return render(request,'display_grades.html',{'objs':objs})
     return render(request,'grade_course_list.html',{'names':names})
+
+def get_course_import(request):
+    '''
+    Function to render empty django form in form.html
+    '''
+    form = course_import()
+    return render(request, 'course_import.html', {
+            "form":form,
+            "form_name":"post_import"
+        })
+
+def post_course_import(request):
+    '''
+    Function to handle a post request coming from form.html
+    '''
+    if request.method == 'POST':
+        form = course_import(request.POST)
+
+        if form.is_valid():
+            print("FORM IS VALID")
+            form_data = form.cleaned_data#retrieve form content
+
+            json_data = json.dumps(form_data)#dumps()returns data as string
+            json_data = json.loads(json_data)#loads() converts string to json format
+
+            resp = requests.post('http://127.0.0.1:8000/course_import/', json=json_data)
+            #json_data in json format is passed on to backend of Clone API
+            if resp.status_code != 201:
+                raise ApiError(resp.status_code)
+            print('\n\nCreated task. ID: {}\n\n'.format(resp.json()["id"]))#resp consists the tuple which was just added
+
+            return render(request, 'result.html',
+                {"done":True,
+                "form_name":"post_import"
+                })
+
+        else:
+            #condition when post is unsuccessfull, and/or form is invalid
+            print("FORM IS NOT VALID")
+            return render(request, 'result.html',
+                          {'form': form ,
+                          'done':False,
+                          "form_name":"post_import"
+                          })
+
+
