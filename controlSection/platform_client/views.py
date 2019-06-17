@@ -14,6 +14,17 @@ class ApiError(Exception):
 
     def __str__(self):
         return "APIError Occured : Status Code = {} ".format(self.status)
+def update_form():
+    resp = requests.get('http://127.0.0.1:8000/get_platform/')
+    platList = []
+    i=0
+    a = resp.json()
+    for item in a:
+        platList.append([])#Adding empty List for Each Platform
+        platList[i].append(item["id"])#Populating the list with id and platform_name
+        platList[i].append(item["thirdparty_platform_name"])
+        i = i+1
+    return platList
 
 def index(request):
     return render(request, 'index.html')
@@ -22,6 +33,7 @@ def get_course_form(request):
     '''
     Function to render empty django form in form.html
     '''
+    #platList = update_form()
     form = course_form()
     return render(request, 'form_course.html', {
             "form":form,
@@ -98,7 +110,7 @@ def post_platform_form(request):
             #json_data in json format is passed on to backend get_platform API
             if resp.status_code != 201:
                 raise ApiError(resp.status_code)
-            print('\n\nCreated task. ID: {}\n\n'.format(resp.json()["id"]))#resp consists the tuple which was just added
+            print('\n\nCreated task. ID: {} PLATFORM NAME: {} \n\n'.format(resp.json()["id"],resp.json()["thirdparty_platform_name"]))#resp consists the tuple which was just added
 
             return render(request, 'result.html',
                 {"done":True, 
