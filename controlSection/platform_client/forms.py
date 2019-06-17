@@ -110,7 +110,7 @@ class course_form(forms.Form):
     updated = forms.DateTimeField(initial="2006-11-25 14:30:59")
     #created = forms.DateTimeField(auto_now=True)
     #updated = forms.DateTimeField(auto_now_add=True)    
-
+    
     resp = requests.get('http://127.0.0.1:8000/get_platform/')
     platList = []
     i=0
@@ -120,11 +120,38 @@ class course_form(forms.Form):
         platList[i].append(item["id"])#Populating the list with id and platform_name
         platList[i].append(item["thirdparty_platform_name"])
         i = i+1
-
-    #platList = tuple(platList)
     
-    select_platforms = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                            choices=platList, required=False)
+    #platList = tuple(platList)
+    '''
+    def __init__(self):
+        self.resp = requests.get('http://127.0.0.1:8000/get_platform/')
+        self.platList = []
+        self.i=0
+        self.a = self.resp.json()
+        for item in self.a:
+            self.platList.append([])#Adding empty List for Each Platform
+            self.platList[self.i].append(item["id"])#Populating the list with id and platform_name
+            self.platList[self.i].append(item["thirdparty_platform_name"])
+            self.i = self.i+1
+    '''
+    
+
+    select_platforms = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=[], required=False)
+    
+    
+    def __init__(self, *args, **kwargs):
+        super(course_form, self).__init__(*args, **kwargs)
+        self.resp = requests.get('http://127.0.0.1:8000/get_platform/')
+        self.platList = []
+        self.i=0
+        self.a = self.resp.json()
+        for item in self.a:
+            self.platList.append([])#Adding empty List for Each Platform
+            self.platList[self.i].append(item["id"])#Populating the list with id and platform_name
+            self.platList[self.i].append(item["thirdparty_platform_name"])
+            self.i = self.i+1
+        self.fields['select_platforms'] = forms.MultipleChoiceField(choices=self.platList, widget=forms.CheckboxSelectMultiple)
+
 
 
 class course_import(forms.Form):
