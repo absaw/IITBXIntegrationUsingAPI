@@ -136,8 +136,7 @@ class course_form(forms.Form):
     '''
     
 
-    select_platforms = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                            choices=[], required=False)
+    select_platforms = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=[], required=False)
     
     
     def __init__(self, *args, **kwargs):
@@ -152,3 +151,17 @@ class course_form(forms.Form):
             self.platList[self.i].append(item["thirdparty_platform_name"])
             self.i = self.i+1
         self.fields['select_platforms'] = forms.MultipleChoiceField(choices=self.platList, widget=forms.CheckboxSelectMultiple)
+
+
+
+class course_import(forms.Form):
+    """
+    Form that take Course URL and directory as input.
+
+    This model clone the course project into the given directory.
+    """
+
+    # Course name 
+    Course = forms.CharField(required=True)
+    # directory where we want to clone the project.
+    Directory = forms.CharField(required=True)

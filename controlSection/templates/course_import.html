@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container" >
+
+    
+    <h1>Import the Course</h1>
+
+    <form method="POST" action="/courseImportForm/">
+
+        {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+
+
+    <!-- <h1>{{ form_data }}</h1> -->
+</div>
+
+{% endblock %}

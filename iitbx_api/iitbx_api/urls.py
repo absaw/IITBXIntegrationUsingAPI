@@ -7,5 +7,5 @@ urlpatterns = [
     path('course/', include('get_course.urls')),
     path('platform/', include('get_platform.urls')),
     path('api/',include('grades.urls')),
-    path('repo/', include('Clone.urls')),
+    path('course_import/', include('Clone.urls')),
 ]
