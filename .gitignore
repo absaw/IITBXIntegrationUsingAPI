@@ -4,4 +4,7 @@
 #igonring virtualenv file
 py36_master_iitbx/
 
+#ignoring vscode cache file
+.vscode/
+
 

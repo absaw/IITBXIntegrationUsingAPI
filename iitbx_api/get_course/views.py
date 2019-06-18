@@ -8,7 +8,7 @@ from get_platform.models import IntegratedPlatforms
 
 
 #Lists all models or create a new one
-#url at this point : "get_course/"
+#url at this point : "course/"
 class CourseOverviewList(APIView):
     #@staticmethod to not use self 
     def get(self, request):

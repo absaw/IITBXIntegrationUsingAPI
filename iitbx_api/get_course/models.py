@@ -88,6 +88,9 @@ class CourseOverview(models.Model):
 
     def __str__(self):
         return self.coursekey
+
 class GroupMember(models.Model):
     platforms = models.ForeignKey(IntegratedPlatforms, related_name='interTable', on_delete=models.SET_NULL, null=True)
     courses = models.ForeignKey(CourseOverview, related_name='interTable', on_delete=models.SET_NULL, null=True, blank=True)
+    def __str__(self):
+        return self.platforms

@@ -111,7 +111,7 @@ class course_form(forms.Form):
     #created = forms.DateTimeField(auto_now=True)
     #updated = forms.DateTimeField(auto_now_add=True)    
     
-    resp = requests.get('http://127.0.0.1:8000/get_platform/')
+    resp = requests.get('http://127.0.0.1:8000/platform/')
     platList = []
     i=0
     a = resp.json()
@@ -124,7 +124,7 @@ class course_form(forms.Form):
     #platList = tuple(platList)
     '''
     def __init__(self):
-        self.resp = requests.get('http://127.0.0.1:8000/get_platform/')
+        self.resp = requests.get('http://127.0.0.1:8000/platform/')
         self.platList = []
         self.i=0
         self.a = self.resp.json()
@@ -142,7 +142,7 @@ class course_form(forms.Form):
     
     def __init__(self, *args, **kwargs):
         super(course_form, self).__init__(*args, **kwargs)
-        self.resp = requests.get('http://127.0.0.1:8000/get_platform/')
+        self.resp = requests.get('http://127.0.0.1:8000/platform/')
         self.platList = []
         self.i=0
         self.a = self.resp.json()

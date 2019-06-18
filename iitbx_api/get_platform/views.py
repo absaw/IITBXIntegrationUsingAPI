@@ -8,7 +8,7 @@ from .serializers import IntegratedPlatformsSerializer
 
 
 #Lists all models or create a new one
-#url at this point : "get_platform/"
+#url at this point : "platform/"
 class IntegratedPlatformsList(APIView):
     #@staticmethod to not use self 
     
