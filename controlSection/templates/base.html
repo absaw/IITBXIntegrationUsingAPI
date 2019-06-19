@@ -12,22 +12,82 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title> Control Section </title>
-    <!-- <style type="text/css">
+  
+    
+    <style type="text/css">
 		html,body {
 		  height:100%
-		}
-	</style> -->
+    }
+     /* The side navigation menu */
+        .sidebar {
+          margin: 0;
+          padding: 0;
+          width: 200px;
+          background-color: #f1f1f1;
+          position: fixed;
+          height: 100%;
+          overflow: auto;
+        }
+
+        /* Sidebar links */
+        .sidebar a {
+          display: block;
+          color: black;
+          padding: 16px;
+          text-decoration: none;
+        }
+
+        /* Active/current link */
+        .sidebar a.active {
+          background-color:rgb(66, 122, 244);
+          color: white;
+        }
+
+        /* Links on mouse-over */
+        .sidebar a:hover:not(.active) {
+          background-color: #555;
+          color: white;
+        }
+
+        /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+        div.content {
+          margin-left: 200px;
+          padding: 1px 16px;
+          height: 1000px;
+        }
+
+        /* On screens that are less than 700px wide, make the sidebar into a topbar */
+        @media screen and (max-width: 700px) {
+          .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+          }
+          .sidebar a {float: left;}
+          div.content {margin-left: 0;}
+        }
+
+        /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+        @media screen and (max-width: 400px) {
+          .sidebar a {
+            text-align: center;
+            float: none;
+          }
+        } 
+	  </style>
 </head>
 
 
 <body style="background-color:#f6f6f6">
+  
         <!-- Navbar Starts -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-                <div class="container">
-                        <a class="navbar-brand" >Control Section</a>
+                  <div class="container">
+                        <a class="navbar-brand" href="/home" >Control Section</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                         </button>
+
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item active">
@@ -52,18 +112,24 @@
                                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
                                 </li>
                             </ul>
+                         </div>
                         </div>
-                </div>
          </nav>
         <!-- Navbar Ends-->
-         <div class="container-fluid" style="min-height:95%; ">
-                <div class="row">
-                          <center>
-                          <h3>Control Section</h3>
-                          </center>
-                </div>
-        </div><hr>
-        <div id="sidebar" style="background-color:#fff" style = "width=20%">
+        <!-- Sidebar -->
+         <!-- The sidebar -->
+          <div class="sidebar">
+              <a href="/home" class = "active">Home</a>
+              <a href="/platformForm">Create Platform</a>
+              <a href="/courseForm/">Create Course</a>             
+              <a href="/courseImportForm/">Course Import</a>
+              <a href="/grades/">Grades</a>
+          </div>
+            
+        <hr>
+        
+
+        <!-- <div id="sidebar" style="background-color:#fff" style = "width=20%">
                         <ul class="side-nav fixed">
                           <li><a href="/home">Home</a></li>
                           <li><a href="/platformForm">Create Platform</a></li>
@@ -71,10 +137,10 @@
                           <li><a href="/courseImportForm/">Course Import</a></li>
                           <li><a href="/grades/">Grades</a></li>
                         </ul>
-         </div> <!--well bs-sidebar affix-->
+         </div> well bs-sidebar affix -->
 
 
-    <div class="container">
+    <div class="content">
 
         {% block content %}
 

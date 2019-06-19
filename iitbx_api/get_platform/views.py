@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import IntegratedPlatforms
 from .serializers import IntegratedPlatformsSerializer
+from get_course.serializers import CourseOverviewSerializer
 
 
 #Lists all models or create a new one
@@ -26,5 +27,24 @@ class IntegratedPlatformsList(APIView):
 
          return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-   
+class OnePlatformAllCourses(APIView):
+
+    def get(self, request, id):
+        platform_name = id
+        platform = IntegratedPlatforms.objects.get(thirdparty_platform_name=platform_name)
+        platform_courses = platform.courses.all()
+
+        print("\n\n Courses in Platform : ", platform_courses)
+        print("\n\n")
+
+        serializer = CourseOverviewSerializer(platform_courses, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
+        
+
+        
+
+
 

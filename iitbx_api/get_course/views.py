@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import CourseOverview, GroupMember
 from .serializers import CourseOverviewSerializer
+from get_platform.serializers import IntegratedPlatformsSerializer
 from get_platform.models import IntegratedPlatforms
 
 
@@ -21,7 +22,7 @@ class CourseOverviewList(APIView):
          print("\nData Received By Backend Course API-> \n",request.data)
          if serializer.is_valid():
              serializer.save()
-
+             # ADDING PLATFORMS TO OUR COURSES
              post_data = request.data# Retrieving the request data
              list_of_platforms = post_data["select_platforms"]# Taking the list of selected platforms
 
@@ -41,4 +42,21 @@ class CourseOverviewList(APIView):
              return Response(serializer.data, status=status.HTTP_201_CREATED)
          return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+class OneCourseAllPlatforms(APIView):
+
+    def get(self, request, id):
+        #sep = id.split(',')
+        coursekey = id
+        #thirdparty_platform_name = sep[1]
+
+        course = CourseOverview.objects.get(coursekey = coursekey)
+        platforms = course.platforms.all()
+        print("\n\nPlatforms are ",platforms)
+        print("\n\n")
+        
+        serializer = IntegratedPlatformsSerializer(platforms, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
    
