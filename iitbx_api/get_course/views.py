@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import CourseOverview, GroupMember
+from .models import CourseOverview
 from .serializers import CourseOverviewSerializer
 from get_platform.serializers import IntegratedPlatformsSerializer
 from get_platform.models import IntegratedPlatforms
-
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 #Lists all models or create a new one
 #url at this point : "course/"
@@ -15,7 +16,7 @@ class CourseOverviewList(APIView):
     def get(self, request):
         course_meta_data = CourseOverview.objects.all()
         serializer = CourseOverviewSerializer(course_meta_data, many = True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
          serializer = CourseOverviewSerializer(data=request.data)
@@ -42,14 +43,38 @@ class CourseOverviewList(APIView):
              return Response(serializer.data, status=status.HTTP_201_CREATED)
          return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+#url at this point : "course/<str:id>"
+# e.g. "course/IITB"
+# This class is used to show a particular course according to the coursekey
+class OneCourse(APIView):
+
+    def get(self, request, id):
+    
+        coursekey = id
+        course = CourseOverview.objects.filter(coursekey = coursekey)
+        print("\n\nCourse Requested: ",course)
+        print("\n\n")
+        
+        serializer = CourseOverviewSerializer(course, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+#url at this point : "course/platform/<str:id>"
+# e.g. "course/platform/cs101"
+# This class is used to show a particular course's all platforms according to the course's coursekey
 class OneCourseAllPlatforms(APIView):
 
     def get(self, request, id):
         #sep = id.split(',')
         coursekey = id
         #thirdparty_platform_name = sep[1]
+        try:
+            course = CourseOverview.objects.get(coursekey = coursekey)
+        except ObjectDoesNotExist:
+            raise Http404
+        except MultipleObjectsReturned:
+            # If multiple courses contain same name it will take the first of them
+            course = CourseOverview.objects.filter(coursekey = coursekey).first()
 
-        course = CourseOverview.objects.get(coursekey = coursekey)
         platforms = course.platforms.all()
         print("\n\nPlatforms are ",platforms)
         print("\n\n")
