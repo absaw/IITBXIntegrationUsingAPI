@@ -1,0 +1,18 @@
+<form class="course-list"  id="course-List" method="post">
+  <p>
+    <label>List Of Courses</label>
+    <select id = "courseList" name="courseList">
+      <option disabled selected value> All courses </option>
+      {% for courseName in courseNames %}
+        <option value = "{{forloop.counter0}}">{{courseName}}</option>
+      {% endfor %}
+    </select>
+
+  </p>
+  <br>
+  <button type="submit" name="selectedOptions">Get Grades for selected options</button>
+  <br>
+  <br>
+  <br>
+  <button type="submit" name="allPlatforms">Get Grades for all platforms</button>
+</form>

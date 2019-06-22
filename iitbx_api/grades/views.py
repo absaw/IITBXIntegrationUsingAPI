@@ -30,14 +30,7 @@ MONGO_USER = "admin"
 # Create your views here.
 labels = ['module_type','module_id','course_id','student_id','grade','max_grade']
 
-mydb = mysql.connector.connect(
-  host="10.129.103.92",
-  user="root",
-  passwd=os.environ.get('mysql_iitbx'),
-  database="edxapp"
-)
-
-mycursor = mydb.cursor()
+platforms=["10.129.103.92",]
 
 # while not password1:
 #     continue
@@ -45,14 +38,11 @@ mycursor = mydb.cursor()
 # print(os.environ.get('mongo_pass'))
 # print(os.environ.get('mysql_iitbx'))
 
-from pymongo import MongoClient
-client = MongoClient("mongodb://admin:"+os.getenv('mongo_pass')+"@10.129.103.92:27017")
-db = client.edxapp
-
-dictionary = dict()
+# from pymongo import MongoClient
 
 
-def fill_data(course):
+
+def fill_data(course,dictionary,db):
     chapterIds=[]
     chapters=[]
     chapterName=[]
@@ -131,17 +121,78 @@ def fill_data(course):
                 print(var[1])
 
 
-results = db.modulestore.active_versions.find({},{"course":1,"_id":0})
-for result in results :
-    # print("-----------------------------------------------------------")
-    # print(result['course'])
-    # print("------------------------------------------------------------")
-    fill_data(result['course'])
 
-class AllStudentsAllCourses(APIView):
+
+class AllPlatforms(APIView):
 
     def get(self, request, format=None):
         #obtain json data from database
+        lst1=[]
+        for platform in platforms:
+            mydb = mysql.connector.connect(
+              host=platform,
+              user="root",
+              passwd=os.environ.get('mysql_iitbx'),
+              database="edxapp"
+            )
+            client = MongoClient("mongodb://admin:"+os.getenv('mongo_pass')+"@"+platform+":27017")
+            db = client.edxapp
+            dictionary = dict()
+            results = db.modulestore.active_versions.find({},{"course":1,"_id":0})
+            for result in results :
+                fill_data(result['course'],dictionary,db)
+            mycursor = mydb.cursor()
+            lst=[]
+            var = ("problem",)
+            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' ")
+            myresult = mycursor.fetchall()
+            cnt = 0
+            for x in myresult :
+                data = dict(zip(labels[::1],x[::1]))
+                string = data['module_id']
+                string = string.split('@')
+                pro_id = string[2]
+                course = data['course_id'].split('+')[1]
+                # print(data['course_id'])
+                # print(pro_id)
+                if not data['max_grade']:
+                    continue
+                if course+pro_id not in dictionary:
+                    cnt = cnt + 1
+                    continue
+                data['courseName'] = dictionary[course+pro_id][0]
+                data['sectionName'] = dictionary[course+pro_id][1]
+                data['subSectionName'] = dictionary[course+pro_id][2]
+                data['unitName'] = dictionary[course+pro_id][3]
+                if data['max_grade'] :
+                    lst.append(data)
+            print(cnt)
+            print(len(lst))
+            lst1.append(lst)
+        if(len(lst1)==0) :
+            raise Http404
+        return Response(lst1)
+
+
+
+
+class AllCourses(APIView):
+
+    def get(self, request, pk, format=None):
+        #obtain json data from database
+        mydb = mysql.connector.connect(
+          host=pk,
+          user="root",
+          passwd=os.environ.get('mysql_iitbx'),
+          database="edxapp"
+        )
+        client = MongoClient("mongodb://admin:"+os.getenv('mongo_pass')+"@"+pk+":27017")
+        db = client.edxapp
+        dictionary = dict()
+        results = db.modulestore.active_versions.find({},{"course":1,"_id":0})
+        for result in results :
+            fill_data(result['course'],dictionary,db)
+        mycursor = mydb.cursor()
         lst=[]
         var = ("problem",)
         mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' ")
@@ -172,15 +223,28 @@ class AllStudentsAllCourses(APIView):
             raise Http404
         return Response(lst)
 
-class AllStudentsOneCourse(APIView):
+class AllStudents(APIView):
 
-    def get_course_data(self, pk):
+    def get_course_data(self, pk, pk1):
         lst=[]
         try:
             #retrieving from databases
-            pk = (pk,)
-            print(pk)
-            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s ",pk)
+            mydb = mysql.connector.connect(
+              host=pk,
+              user="root",
+              passwd=os.environ.get('mysql_iitbx'),
+              database="edxapp"
+            )
+            client = MongoClient("mongodb://admin:"+os.getenv('mongo_pass')+"@"+pk+":27017")
+            db = client.edxapp
+            dictionary = dict()
+            results = db.modulestore.active_versions.find({},{"course":1,"_id":0})
+            for result in results :
+                fill_data(result['course'],dictionary,db)
+            mycursor = mydb.cursor()
+            pk1 = (pk1,)
+            print(pk1)
+            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s ",pk1)
             myresult = mycursor.fetchall()
             # print(type(myresult))
             for x in myresult :
@@ -211,21 +275,34 @@ class AllStudentsOneCourse(APIView):
         except :
             raise Http404
 
-    def get(self, request, pk, format=None):
-        data = self.get_course_data(pk)
+    def get(self, request, pk, pk1, format=None):
+        data = self.get_course_data(pk,pk1)
         return Response(data)
 
-class OneStudentOneCourse(APIView):
+class OneStudent(APIView):
 
-    def get_course_data_of_student(self, pk, pk1):
+    def get_course_data_of_student(self, pk, pk1, pk2):
         lst=[]
         try:
             #retrieving from database
-            print(pk1)
-            pk = (pk,pk1)
+            mydb = mysql.connector.connect(
+              host=pk,
+              user="root",
+              passwd=os.environ.get('mysql_iitbx'),
+              database="edxapp"
+            )
+            client = MongoClient("mongodb://admin:"+os.getenv('mongo_pass')+"@"+pk+":27017")
+            db = client.edxapp
+            dictionary = dict()
+            results = db.modulestore.active_versions.find({},{"course":1,"_id":0})
+            for result in results :
+                fill_data(result['course'],dictionary,db)
+            mycursor = mydb.cursor()
+            print(pk2)
+            pk1 = (pk1,pk2)
             print(type(pk1))
             pk1=(pk1,)
-            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s and student_id=%s ",pk)
+            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s and student_id=%s ",pk1)
             myresult = mycursor.fetchall()
             for x in myresult :
                 data = dict(zip(labels[::1],x[::1]))
@@ -245,6 +322,6 @@ class OneStudentOneCourse(APIView):
         except :
             raise Http404
 
-    def get(self, request, pk, pk1, format=None):
-        data = self.get_course_data_of_student(pk,pk1)
+    def get(self, request, pk, pk1, pk2, format=None):
+        data = self.get_course_data_of_student(pk,pk1,pk2)
         return Response(data)
