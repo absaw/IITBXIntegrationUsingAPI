@@ -46,7 +46,7 @@ def courseForm(request):
 
         if form.is_valid():
 
-            form_data = form.cleaned_data#retrieve form content
+            form_data = form.cleaned_data#retrieve form content in a normalized format for each field
             print("FORM IS VALID")
 
             def convert_timestamp(item_date_object):
