@@ -23,7 +23,8 @@ class CourseOverviewList(APIView):
          print("\nData Received By Backend Course API-> \n",request.data)
          if serializer.is_valid():
              serializer.save()
-             # ADDING PLATFORMS TO OUR COURSES
+             
+              ###### ADDING PLATFORMS TO OUR COURSES###############
              post_data = request.data# Retrieving the request data
              list_of_platforms = post_data["select_platforms"]# Taking the list of selected platforms
 

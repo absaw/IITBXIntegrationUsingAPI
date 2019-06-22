@@ -111,15 +111,7 @@ class course_form(forms.Form):
     #created = forms.DateTimeField(auto_now=True)
     #updated = forms.DateTimeField(auto_now_add=True)    
     
-    resp = requests.get('http://127.0.0.1:8000/platform/')
-    platList = []
-    i=0
-    a = resp.json()
-    for item in a:
-        platList.append([])#Adding empty List for Each Platform
-        platList[i].append(item["id"])#Populating the list with id and platform_name
-        platList[i].append(item["thirdparty_platform_name"])
-        i = i+1
+    
     
     #platList = tuple(platList)
     '''
@@ -150,6 +142,7 @@ class course_form(forms.Form):
             self.platList[self.i].append(item["id"])#Populating the list with id and platform_name
             self.platList[self.i].append(item["thirdparty_platform_name"])
             self.i = self.i+1
+        # platlist is a 2d list containing the id and the platform names of all the existing platforms that we got from "resp"
         self.fields['select_platforms'] = forms.MultipleChoiceField(choices=self.platList, widget=forms.CheckboxSelectMultiple)
 
 
