@@ -299,27 +299,37 @@ class OneStudent(APIView):
                 fill_data(result['course'],dictionary,db)
             mycursor = mydb.cursor()
             print(pk2)
+            # print(pk1)
+            # print(type(pk1))
+            # print(type(pk2))
             pk1 = (pk1,pk2)
             print(type(pk1))
-            pk1=(pk1,)
-            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s and student_id=%s ",pk1)
+            print(pk1)
+            mycursor.execute("SELECT  module_type,module_id,course_id,student_id,grade,max_grade FROM courseware_studentmodule WHERE module_type='problem' and course_id=%s and student_id=%s",pk1)
             myresult = mycursor.fetchall()
+            # print(myresult)
             for x in myresult :
                 data = dict(zip(labels[::1],x[::1]))
                 string = data['module_id']
                 string = string.split('@')
                 pro_id = string[2]
                 course = data['course_id'].split('+')[1]
+                if not data['max_grade']:
+                    continue
+                if course+pro_id not in dictionary:
+                    continue
                 data['courseName'] = dictionary[course+pro_id][0]
                 data['sectionName'] = dictionary[course+pro_id][1]
                 data['subSectionName'] = dictionary[course+pro_id][2]
                 data['unitName'] = dictionary[course+pro_id][3]
                 if data['max_grade']:
                     lst.append(data)
+            # print(len(lst))
             if(len(lst)==0) :
                 raise Http404
             return lst
         except :
+            # print("except")
             raise Http404
 
     def get(self, request, pk, pk1, pk2, format=None):
