@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import requests
-from .forms import platform_form, course_form
+from .forms import platform_form, course_form, course_import
 import datetime
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -21,21 +21,23 @@ class ApiError(Exception):
 
     def __str__(self):
         return "APIError Occured : Status Code = {} ".format(self.status)
+def update_form():
+    resp = requests.get('http://127.0.0.1:8000/platform/')
+    platList = []
+    i=0
+    a = resp.json()
+    for item in a:
+        platList.append([])#Adding empty List for Each Platform
+        platList[i].append(item["id"])#Populating the list with id and platform_name
+        platList[i].append(item["thirdparty_platform_name"])
+        i = i+1
+    return platList
 
 def index(request):
     return render(request, 'index.html')
+    
 
-def get_course_form(request):
-    '''
-    Function to render empty django form in form.html
-    '''
-    form = course_form()
-    return render(request, 'form_course.html', {
-            "form":form,
-            "form_name":"course"
-        })
-
-def post_course_form(request):
+def courseForm(request):
     '''
     Function to handle a post request coming from form.html
     '''
@@ -55,7 +57,7 @@ def post_course_form(request):
             json_data = json.dumps(form_data, default=convert_timestamp)#dumps()returns data as string
             json_data = json.loads(json_data)#loads() converts string to json format
 
-            resp = requests.post('http://127.0.0.1:8000/get_course/', json=json_data)
+            resp = requests.post('http://127.0.0.1:8000/course/', json=json_data)
             #json_data in json format is passed on to backend get_course API
             if resp.status_code != 201:
                 raise ApiError(resp.status_code)
@@ -71,18 +73,14 @@ def post_course_form(request):
                           'done':False,
                           "form_name":"course"
                           })
+    else:
+        form = course_form()
+        return render(request, 'form_course.html', {
+                "form":form,
+                "form_name":"course"
+            })
 
-def get_platform_form(request):
-    '''
-    Function to render empty django form in form.html
-    '''
-    form = platform_form()
-    return render(request, 'form_platform.html', {
-            "form":form,
-            "form_name":"platform"
-        })
-
-def post_platform_form(request):
+def platformForm(request):
     '''
     Function to handle a post request coming from form.html
     '''
@@ -101,11 +99,11 @@ def post_platform_form(request):
             json_data = json.dumps(form_data, default=convert_timestamp)#dumps()returns data as string
             json_data = json.loads(json_data)#loads() converts string to json format
 
-            resp = requests.post('http://127.0.0.1:8000/get_platform/', json=json_data)#http://10.105.24.250:8000/get_course/
-            #json_data in json format is passed on to backend get_platform API
+            resp = requests.post('http://127.0.0.1:8000/platform/', json=json_data)#http://10.105.24.250:8000/course/
+            #json_data in json format is passed on to backend platform API
             if resp.status_code != 201:
                 raise ApiError(resp.status_code)
-            print('\n\nCreated task. ID: {}\n\n'.format(resp.json()["id"]))#resp consists the tuple which was just added
+            print('\n\nCreated task. ID: {} PLATFORM NAME: {} \n\n'.format(resp.json()["id"],resp.json()["thirdparty_platform_name"]))#resp consists the tuple which was just added
 
             return render(request, 'result.html',
                 {"done":True,
@@ -120,6 +118,13 @@ def post_platform_form(request):
                           'done':False,
                           "form_name":"platform"
                           })
+    else:
+        form = platform_form()
+        return render(request, 'form_platform.html', {
+                "form":form,
+                "form_name":"platform"
+            })
+
 
 
 def _url(path):
@@ -176,6 +181,7 @@ for platform in platforms:
 @csrf_exempt
 # @api_view(['POST',])
 def grades_view(request):
+
 
     global unique_keys,courseNames,platform_ids,platformNames,dictionary,platformUrls
     global flag, tmp_keys, tmp_urls
@@ -264,3 +270,44 @@ def grade_ajax_view(request):
         tmp_keys = tmp1
         # courseNames = tmp2
         return render(request,'grade_course_list_ajax.html',{'courseNames':tmp2,'platformNames':platformNames})
+
+
+def courseImportForm(request):
+    '''
+    Function to handle a post request coming from form.html
+    '''
+    if request.method == 'POST':
+        form = course_import(request.POST)
+
+        if form.is_valid():
+            print("FORM IS VALID")
+            form_data = form.cleaned_data#retrieve form content
+
+            json_data = json.dumps(form_data)#dumps()returns data as string
+            json_data = json.loads(json_data)#loads() converts string to json format
+
+            resp = requests.post('http://127.0.0.1:8000/course_import/', json=json_data)
+            #json_data in json format is passed on to backend of Clone API
+            if resp.status_code != 201:
+                raise ApiError(resp.status_code)
+            print('\n\nCreated task. ID: {}\n\n'.format(resp.json()["id"]))#resp consists the tuple which was just added
+
+            return render(request, 'result.html',
+                {"done":True,
+                "form_name":"post_import"
+                })
+
+        else:
+            #condition when post is unsuccessfull, and/or form is invalid
+            print("FORM IS NOT VALID")
+            return render(request, 'result.html',
+                          {'form': form ,
+                          'done':False,
+                          "form_name":"post_import"
+                          })
+    else:
+        form = course_import()
+        return render(request, 'course_import.html', {
+                "form":form,
+                "form_name":"post_import"
+            })
