@@ -1,8 +1,11 @@
 #ignore all __pychace__ files
 *.pyc
+*.swp
+
+
 
 #igonring virtualenv file
-py36_master_iitbx/
+#py36_master_iitbx/
 
 #ignoring vscode cache file
 .vscode/

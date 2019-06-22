@@ -144,43 +144,133 @@ def present(name,names):
     return flag
 
 
+unique_keys=[]
+courseNames=[]
+platform_ids=[]
+platformNames=[]
+platformUrls=[]
+flag = 0
+tmp_keys = []
+tmp_urls  = 0
+dictionary = dict()
+courses = requests.get(_url('/course'))
+# unique_keys.clear()
+# courseNames.clear()
+# platform_ids.clear()
+# platformNames.clear()
+platforms = requests.get(_url('/platform'))
+# print(courses.json())
+platforms = platforms.json()
+courses = courses.json()
+for course in courses:
+    # if course['display_name'] not in names:
+    if present(course['display_name'],courseNames) :
+        unique_keys.append(course['coursekey'])
+        courseNames.append(course['display_name'])
+        for platform in course['platforms']:
+            if platform not in dictionary:
+                dictionary[platform]=[]
+            dictionary[platform].append(len(courseNames)-1)
+for platform in platforms:
+    if present(platform['thirdparty_platform_name'],platformNames):
+        platformNames.append(platform['thirdparty_platform_name'])
+        platform_ids.append(platform['id'])
+        platformUrls.append(platform['ServerUrl'])
+# pla
+
 @csrf_exempt
 # @api_view(['POST',])
 def grades_view(request):
 
-    courses = requests.get(_url('/course'))
-    unique_keys=[]
-    names=[]
-    # print(courses.json())
-    courses = courses.json()
-    for course in courses:
-        # if course['display_name'] not in names:
-        if present(course['display_name'],names) :
-            unique_keys.append(course['coursekey'])
-            names.append(course['display_name'])
 
+    global unique_keys,courseNames,platform_ids,platformNames,dictionary,platformUrls
+    global flag, tmp_keys, tmp_urls
+    if request.method == 'GET':
+        flag=0
+        unique_keys=[]
+        courseNames=[]
+        platform_ids=[]
+        platformNames=[]
+        platformUrls=[]
+        dictionary = dict()
+        courses = requests.get(_url('/course'))
+        # unique_keys.clear()
+        # courseNames.clear()
+        # platform_ids.clear()
+        # platformNames.clear()
+        platforms = requests.get(_url('/platform'))
+        # print(courses.json())
+        platforms = platforms.json()
+        courses = courses.json()
+        for course in courses:
+            # if course['display_name'] not in names:
+            if present(course['display_name'],courseNames) :
+                unique_keys.append(course['coursekey'])
+                courseNames.append(course['display_name'])
+                for platform in course['platforms']:
+                    if platform not in dictionary:
+                        dictionary[platform]=[]
+                    dictionary[platform].append(len(courseNames)-1)
+        for platform in platforms:
+            if present(platform['thirdparty_platform_name'],platformNames):
+                platformNames.append(platform['thirdparty_platform_name'])
+                platform_ids.append(platform['id'])
+                platformUrls.append(platform['ServerUrl'])
     if request.method == "POST" :
-        if 'oneCourse' in request.POST:
-            index = request.POST.getlist('courseList',None)[0]
-        # print(unique_keys)
-        # print(index)
-        # print(type(unique_keys))
-        # print(type(index))
-        # print(unique_keys[index])
-            index = int(index)
-        # print(unique_keys[index])
-        # try :
-            objs = requests.get(_url('/api/grade/v0/grades/'+unique_keys[index]))
-            objs  = objs.json()
-            print(objs)
-            return render(request,'display_grades.html',{'objs':objs})
-        # except :
-        #     raise Http404
-        elif 'allCourses' in request.POST:
-            objs = requests.get(_url('/api/grade/v0/grades'))
-            objs  = objs.json()
-            return render(request,'display_grades.html',{'objs':objs})
-    return render(request,'grade_course_list.html',{'names':names})
+        if 'selectedOptions' in request.POST:
+            if not flag:
+                # direct to html with appropriate error message
+                raise Http404
+            try:
+                index = request.POST.getlist('courseList',None)[0]
+                index = int(index)
+                print(tmp_urls)
+                objs = requests.get(_url('/api/grade/v0/grades/'+tmp_urls+'/'+tmp_keys[index]))
+                objs  = objs.json()
+                # print(objs)
+                return render(request,'display_grades.html',{'objs':objs})
+            except:
+                print("except-block")
+                objs = requests.get(_url('/api/grade/v0/grades/'+tmp_urls))
+                objs  = objs.json()
+                return render(request,'display_grades.html',{'objs':objs})
+        elif 'allPlatforms' in request.POST:
+            objss = requests.get(_url('/api/grade/v0/grades'))
+            # objs = objs[0]
+            objss  = objss.json()
+            # print(objss)
+            return render(request,'display_grades_all_platforms.html',{'objss':objss})
+    print(platformNames)
+    print(platform_ids)
+    return render(request,'grade_course_list.html',{'courseNames':courseNames,'platformNames':platformNames})
+
+@csrf_exempt
+def grade_ajax_view(request):
+    global unique_keys
+    global courseNames,platformUrls
+    global flag, tmp_keys, tmp_urls
+    if request.method=='POST':
+        flag=1
+        pid = request.POST['pid']
+        print(platformNames)
+        # print(request.POST['platformNames'])
+        print(pid)
+        print(type(pid))
+        print(platform_ids)
+        pid = int(pid)
+        tmp_urls = platformUrls[pid]
+        pid = platform_ids[pid]
+        tmp1=[]
+        tmp2=[]
+        for i in dictionary[pid]:
+            tmp1.append(unique_keys[i])
+            tmp2.append(courseNames[i])
+        print(tmp1)
+        print(tmp2)
+        tmp_keys = tmp1
+        # courseNames = tmp2
+        return render(request,'grade_course_list_ajax.html',{'courseNames':tmp2,'platformNames':platformNames})
+
 
 def courseImportForm(request):
     '''
@@ -221,4 +311,3 @@ def courseImportForm(request):
                 "form":form,
                 "form_name":"post_import"
             })
-

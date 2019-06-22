@@ -1,22 +1,56 @@
 
+<form class="platform-list" id="platform-List" method="post">
+  <p>
+    <label>List Of Platforms</label>
+    <select id = "platformList" name="platformList">
+      <option disabled selected value> Select Platform </option>
+      {% for platformName in platformNames %}
+        <option value = "{{forloop.counter0}}">{{platformName}}</option>
+      {% endfor %}
+    </select>
+
+  </p>
+</form>
 
 
-
-
-<form class="course-list"  method="post">
+<form class="course-list"  id="course-List" method="post">
   <p>
     <label>List Of Courses</label>
     <select id = "courseList" name="courseList">
-      {% for name in names %}
-        <option value = "{{forloop.counter0}}">{{name}}</option>
+      <option disabled selected value> All courses </option>
+      {% for courseName in courseNames %}
+        <option value = "{{forloop.counter0}}">{{courseName}}</option>
       {% endfor %}
     </select>
 
   </p>
   <br>
-  <button type="submit" name="oneCourse">Get Grades for selected course</button>
+  <button type="submit" name="selectedOptions">Get Grades for selected options</button>
   <br>
   <br>
   <br>
-  <button type="submit" name="allCourses">Get Grades for all courses</button>
+  <button type="submit" name="allPlatforms">Get Grades for all platforms</button>
 </form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $("#platform-List").change(function(){
+      // print()
+      var pid = $("#platformList").val();
+      $.ajax({
+        url:'grade_ajax/',
+        method : 'post',
+        data: {
+          'pid' : pid,
+        },
+        success: function(data) {
+          // console.log(data)
+          console.log(document.getElementById("platform-List"))
+          $("#course-List").html(data)
+        }
+      })
+    })
+
+
+
+</script>
