@@ -35,7 +35,7 @@ def update_form():
 
 def index(request):
     return render(request, 'index.html')
-    
+
 
 def courseForm(request):
     '''
@@ -193,6 +193,7 @@ def grades_view(request):
         platformNames=[]
         platformUrls=[]
         dictionary = dict()
+        
         courses = requests.get(_url('/course'))
         # unique_keys.clear()
         # courseNames.clear()
@@ -202,11 +203,14 @@ def grades_view(request):
         # print(courses.json())
         platforms = platforms.json()
         courses = courses.json()
+        print(courses)
+        print(platforms)
         for course in courses:
             # if course['display_name'] not in names:
             if present(course['display_name'],courseNames) :
                 unique_keys.append(course['coursekey'])
                 courseNames.append(course['display_name'])
+
                 for platform in course['platforms']:
                     if platform not in dictionary:
                         dictionary[platform]=[]

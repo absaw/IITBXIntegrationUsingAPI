@@ -1,0 +1,30 @@
+<table style="width:100%">
+  <tr>
+    <th>Module Type</th>
+    <th>Module Id</th>
+    <th>Course Id</th>
+    <th>Student Id</th>
+    <th>Grade</th>
+    <th>Max Grade</th>
+    <th>Course</th>
+    <th>Section</th>
+    <th>Sub Section</th>
+    <th>Unit</th>
+  </tr>
+  {% for objs in objss %}
+    {% for obj in objs %}
+      <tr>
+        <td>{{obj.module_type}}</td>
+        <td>{{obj.module_id}}</td>
+        <td>{{obj.course_id}}</td>
+        <td>{{obj.student_id}}</td>
+        <td>{{obj.grade}}</td>
+        <td>{{obj.max_grade}}</td>
+        <td>{{obj.courseName}}</td>
+        <td>{{obj.sectionName}}</td>
+        <td>{{obj.subSectionName}}</td>
+        <td>{{obj.unitName}}</td>
+      </tr>
+    {% endfor %}
+  {% endfor %}
+</table>
