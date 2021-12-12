@@ -23,28 +23,29 @@ The aim of this project was to develop four application programming interfaces(A
   <h1>Screenshots</h1>
   
   <h3>Control Section Course Creation</h3>
-  <img src="https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/controlSection/courseForm.png">
-  
+  <img src="https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/controlSection/courseForm.png">
+            
    <h3>Control Section Platform Creation</h3>
-  <img src="https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/controlSection/platformForm.png">
+  <img src="https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/controlSection/platformForm.png">
   
   <h2>Course API - various functionalities</h3>
   
   <h3>One Course</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/oneCourse.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/oneCourse.png">
+  
   <h3>All Courses</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/allcourse.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/allcourse.png">
   <h3>Platforms on one course</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/oneCourseAllPlatforms.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/oneCourseAllPlatforms.png">
   
   <h2>Platform API - various functionalites</h2>
   
   <h3>One Platform</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/platform-iitb.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/platform-iitb.png">
   <h3>All Platforms</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/platform.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/platform.png">
   <h3>Courses on one platform</h3>
-  <img src = "https://github.com/absaw/Integration-using-APIs-with-IITBX-platform/tree/master/Screenshots/iitbxApi/onePlatformAllCourses.png">
+  <img src = "https://github.com/absaw/IITBXIntegrationUsingAPI/blob/master/Screenshots/iitbxApi/onePlatformAllCourses.png">
 
 </p>
 
